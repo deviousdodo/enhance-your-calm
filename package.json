@@ -6,6 +6,9 @@
   "repository": "git@github.com:deviousdodo/enhance-your-calm.git",
   "author": "Adrian Gheorghe <adrian.gheorghe@gmail.com>",
   "license": "MIT",
+  "jest": {
+    "coverageDirectory": "./coverage/"
+  },
   "scripts": {
     "test": "jest"
   },

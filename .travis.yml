@@ -5,4 +5,7 @@ services:
   - redis-server
 before_script:
   - "yarn add ioredis --peer"
-script: "yarn test"
+  - "yarn global add codecov"
+script:
+  - yarn test --coverage
+  - codecov
