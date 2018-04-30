@@ -8,10 +8,10 @@ Sliding window rate limiter based on redis lists. It requires [ioredis](https://
 
 ## Features
 
-0. does not over-penalize clients.
-0. worst case requires 4 O(1) operations (+ 1 EXPIRE).
-0. uses a single list of numbers that auto-expires for each combination of key-interval.
-0. max memory cost: an int * number of max allowed calls
+* does not over-penalize clients.
+* worst case requires 4 O(1) operations (+ 1 EXPIRE).
+* uses a single list of numbers that auto-expires for each combination of key-interval.
+* max memory cost: an int * number of max allowed calls
 
 ## Installation
 
