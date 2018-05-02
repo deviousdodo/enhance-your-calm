@@ -1,6 +1,6 @@
 {
   "name": "enhance-your-calm",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Sliding window rate limiter based on redis lists",
   "main": "index.js",
   "repository": "git@github.com:deviousdodo/enhance-your-calm.git",
