@@ -9,8 +9,9 @@ Sliding window rate limiter based on redis lists. It requires [ioredis](https://
 ## Features
 
 * does not over-penalize clients.
-* worst case requires 4 O(1) operations (+ 1 EXPIRE).
-* uses a single list of numbers that auto-expires for each combination of key-interval.
+* allows multiple intervals for the same key.
+* worst case requires 4 O(1) operations (+ 1 EXPIRE) for each key-interval pair.
+* uses a single list of numbers that auto-expires for each key-interval pair.
 * max memory cost: an int * number of max allowed calls
 
 ## Installation
@@ -30,16 +31,39 @@ const Redis = require("ioredis");
 const redis = new Redis();
 
 const limiter = require("enhance-your-calm")(redis);
-limiter.check({ name: "listUsers", max: 3, seconds: 300 }).then(v => console.log(v)); // logs true
-limiter.check({ name: "listUsers", max: 3, seconds: 300 }).then(v => console.log(v)); // logs true
-limiter.check({ name: "listUsers", max: 3, seconds: 300 }).then(v => console.log(v)); // logs true
-limiter.check({ name: "listUsers", max: 3, seconds: 300 }).then(v => console.log(v)); // logs false
 
-// if you want to know the Redis key name used by the lib:
-limiter.keyname({ name: "listusers", seconds: 300 });
+// allow 10 calls per 5 minutes.
+const canList = () => limiter.check("list", { max: 10, seconds: 300 });
+
+let listCalls = [];
+for (let i = 0; i < 3; i++) {
+  listCalls.push(canList());
+}
+Promise.all(listCalls).then(v => console.log(v)); // outputs [true, true, false]
+
+// allow 1 call per minute and 100 per day.
+const canCreate = () => limiter.check(
+  "create",
+  [{ max: 1, seconds: 60 }, { max: 100, seconds: 24 * 3600 }]
+);
+
+let createCalls = [];
+createCalls.push(canCreate());
+createCalls.push(canCreate());
+for (let i = 0; i < 100; i++) {
+  createCalls.push(delay(canCreate, 61));
+}
+Promise.all(createCalls).then(v => console.log(v)); // outputs [true, false, true, true, ..., false]
+
+// if you want to know the generated Redis key name you need to provide the name & interval:
+limiter.keyname("listusers", 24 * 3600);
 ```
 
-Based on [@luin](https://github.com/luin)'s [StackOverflow answer](https://stackoverflow.com/questions/13175050/how-to-implement-rate-limiting-using-redis)
+## Attribution
+
+Lua code was inspired by [@luin](https://github.com/luin)'s [StackOverflow answer](https://stackoverflow.com/questions/13175050/how-to-implement-rate-limiting-using-redis)
+
+Package name was taken from Twitter's 420 HTTP Status text :)
 
 ## License
 
