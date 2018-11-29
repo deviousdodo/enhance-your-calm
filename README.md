@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/deviousdodo/enhance-your-calm.svg?branch=master)](https://travis-ci.org/deviousdodo/enhance-your-calm)
 [![Test Coverage](https://img.shields.io/codecov/c/github/deviousdodo/enhance-your-calm/master.svg)](https://codecov.io/github/deviousdodo/enhance-your-calm/)
 
-Sliding window rate limiter based on redis lists. It requires [ioredis](https://github.com/luin/ioredis).
+Sliding window rate limiter based on redis lists. It requires [ioredis v3](https://github.com/luin/ioredis). **Using latest ioredis (v4) will not work!**
 
 ## Features
 
